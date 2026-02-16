@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: read
-  packages: write
+  id-token: write
 
 jobs:
   build-and-push:
@@ -25,15 +25,13 @@ jobs:
           mkdir -p dist/spegel_linux_amd64
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o dist/spegel_linux_amd64/spegel .
 
+      - name: Setup JFrog Fly
+        uses: jfrog/fly-action@v1
+        with:
+          url: https://devopspaper.jfrog.io
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -43,5 +41,5 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ghcr.io/kainanyuval/spegel:${{ github.sha }}
-            ghcr.io/kainanyuval/spegel:scoring-latest
+            devopspaper.jfrog.io/docker/kainanyuval/spegel:${{ github.sha }}
+            devopspaper.jfrog.io/docker/kainanyuval/spegel:scoring-latest

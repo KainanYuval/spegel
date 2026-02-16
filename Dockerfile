@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/static:nonroot
+FROM devopspaper.jfrog.io/docker/gcr.io/distroless/static:nonroot
 ARG TARGETOS
 ARG TARGETARCH
 COPY ./dist/spegel_${TARGETOS}_${TARGETARCH}/spegel /
